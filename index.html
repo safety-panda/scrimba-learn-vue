@@ -33,7 +33,7 @@ img {
 	<body>
 
 		<div id="app">
-			<p v-html="wizard"></p>
+			<p v-html="lumos(wizard)"></p>
 		</div>
 
 		<script>
@@ -60,6 +60,9 @@ var app = new Vue({
 	el: "#app",
 	data: {
 		wizard: emojify("wizard")
+	},
+	methods: {
+		lumos: cast(emojify("lumos"))
 	}
 })
 
