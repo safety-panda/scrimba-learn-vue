@@ -1,3 +1,10 @@
+<!--
+This vue app will listen for a click on the emoji and change the state of the 'sirius' object
+This will then render the vue app depending on the state of the sirius object
+
+On click it will call the functions that control the emoji displayed, the background, and the breathe animation
+ -->
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -14,7 +21,7 @@
 }
 
 #app {
-	display: flex; flex-direction: column;
+	display: flex;
 	justify-content: center; align-items: center;
 	width: 100vw; height: 100vh;
 	font-weight: 900; font-size: 8rem;
@@ -28,14 +35,27 @@ img {
 	vertical-align: calc(-0.12109375em);
 }
 
+/* classes to define man and dog */
+.breathe--man { animation: breathe 4.0s infinite; }
+.breathe--dog { animation: breathe 0.5s infinite; }
+
+/* animation to control breathing */
+@keyframes breathe {
+	  0% { transform: scale(0.95); }
+	 50% { transform: scale(1.05); }
+	100% { transform: scale(0.95); }
+}
+
 		</style>
 	</head>
 	<body>
 
-		<div id="app">
-			<wizardy :name="harry" :spello="oculus_reparo"></wizardy>
-			<wizardy :name="ron" :spello="wingardium_leviosa"></wizardy>
-			<wizardy :name="hermione" :spello="alohomora"></wizardy>
+		<!--
+		to add in line css we need to pass an object
+		so we assign the output of the background function as the background element
+		-->
+		<div id="app" :style="{ background: background() }">
+			<p v-html="active" @click="animagus" :class="breathe()"></p>
 		</div>
 
 		<script>
@@ -48,40 +68,53 @@ function emojify(name) {
 	return out
 }
 
-// cast returns a spell (function) that decorates the wizard
-function spell(emoji) {
-	var magic = emojify("magic")
-	return function (inputInputWhenCalled) {
-		return inputInputWhenCalled + " " + magic + " " + emoji + " " + magic
-	}
-}
-
-// name prop searches vue instance for a property called by what is input as 'name' in the template
-// it finds the property in data which returns an emoji
-// spello prop searches vue instance for a property called by what is input as 'spello' in the template
-// it finds the property in methods which return the function that is returned by the spell
-Vue.component("wizardy", {
-	props: ["name", "spello"],
-	template: `<p v-html="spello(name)"></p>`
-})
-
 var app = new Vue({
 	el: "#app",
 	data: {
-		harry       : emojify("harry"      ),
-		ron         : emojify("ron"        ),
-		hermione    : emojify("hermione"   )
+		// active is an object that contains the current state of the sirius object
+		active: emojify("sirius--man"),
+		
+		// sirius is an object that contains two states: man and dog
+		sirius: {
+			man: emojify("sirius--man"),
+			dog: emojify("sirius--dog")
+		}
 	},
 	methods: {
-		// oculus_reparo returns a spell (function) that repairs glasses
-		oculus_reparo: spell(emojify("oculus-reparo")),
-		// wingardium_leviosa returns a spell (function) that levitates an object
-		wingardium_leviosa: spell(emojify("wingardium-leviosa")),
-		// alohomora returns a spell (function) that unlocks a door
-		alohomora: spell(emojify("alohomora"))
+		// an animagus is a wizard whom can shapeshift
+		// essentialy this a toggle function for the active state of sirius that will be called on mouse click
+		// if it is a man it will set it to dog
+		// or if it is not man it will set it back to man
+		// when we call this it asks if active is already a man
+		animagus: function () {
+			this.active = (
+				this.active == this.sirius.man ?
+					this.sirius.dog :
+					this.sirius.man
+			)
+		},
+		// breathe returns the corresponding .breathe--* class
+		// this is a function that retuns the name of the class to use for the breathing animation
+		// this function will be called when binding a class element to the template tag
+		breathe: function () {
+			return (
+				this.active == this.sirius.man ?
+					"breathe--man" :
+					"breathe--dog"
+			)
+		},
+		// background returns the corresponding background
+		// this sets the background colour depending on if sirius is man or not
+		// this returns a string that will be passed to in line css by binding style element in the div
+		background: function () {
+			return (
+				this.active == this.sirius.man ?
+					"" :
+					"black"
+			)
+		},
 	}
 })
-
 
 		</script>
 
