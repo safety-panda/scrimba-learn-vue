@@ -64,7 +64,7 @@ img {
 
 // emojify returns the corresponding emoji image
 function emojify(name) {
-	var out = `<img src="emojis/` + name + `.png">`
+	var out = `<img src="../emojis/` + name + `.png">`
 	return out
 }
 
@@ -73,7 +73,6 @@ var app = new Vue({
 	data: {
 		// active is an object that contains the current state of the sirius object
 		active: emojify("sirius--man"),
-		
 		// sirius is an object that contains two states: man and dog
 		sirius: {
 			man: emojify("sirius--man"),
