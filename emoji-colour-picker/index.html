@@ -1,3 +1,10 @@
+<!--
+this project already has a grid that populates with a custom vue component for each swatch in the array
+the swatch component has props passed to it to customise each swatch
+
+this project wants to change the text color on only the white swatch as it does not show up well on the light grey background
+ -->
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -106,7 +113,7 @@ img {
 
 // emojify returns the corresponding emoji image
 function emojify(name) {
-	var out = `<img src="emojis/` + name + `.png">`
+	var out = `<img src="../emojis/` + name + `.png">`
 	return out
 }
 
@@ -120,7 +127,7 @@ Vue.component("swatch", {
 					:class="{ bounce: swatch == active }"
 				></span>
 			</div>
-			<div class="grid-cell--bottom" :style="{ color: swatch.color }">
+			<div class="grid-cell--bottom" :style="{ color: swatch.color == '#ffffff' ? '#000000' : swatch.color }">
 				{{ swatch.color.toUpperCase() }}
 			</div>
 		</div>
