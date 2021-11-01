@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	<head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://cdn.rawgit.com/jgthms/minireset.css/master/minireset.css">
@@ -14,7 +14,7 @@
 }
 
 #app {
-	display: flex;
+	display: flex; flex-direction: column;
 	justify-content: center; align-items: center;
 	width: 100vw; height: 100vh;
 	font-weight: 900; font-size: 8rem;
@@ -33,7 +33,9 @@ img {
 	<body>
 
 		<div id="app">
-			<p v-html="incendio(lumos(wizard))"></p>
+			<wizardy :name="harry" :spello="oculus_reparo"></wizardy>
+			<wizardy :name="ron" :spello="wingardium_leviosa"></wizardy>
+			<wizardy :name="hermione" :spello="alohomora"></wizardy>
 		</div>
 
 		<script>
@@ -47,25 +49,39 @@ function emojify(name) {
 }
 
 // cast returns a spell (function) that decorates the wizard
-function cast(emoji) {
-    if (!emoji) {
-        emoji = "¯\\_(ツ)_/¯"
-    }
-	return function (wizard) {
-		return emoji + wizard + emoji
+function spell(emoji) {
+	var magic = emojify("magic")
+	return function (inputInputWhenCalled) {
+		return inputInputWhenCalled + " " + magic + " " + emoji + " " + magic
 	}
 }
+
+// name prop searches vue instance for a property called by what is input as 'name' in the template
+// it finds the property in data which returns an emoji
+// spello prop searches vue instance for a property called by what is input as 'spello' in the template
+// it finds the property in methods which return the function that is returned by the spell
+Vue.component("wizardy", {
+	props: ["name", "spello"],
+	template: `<p v-html="spello(name)"></p>`
+})
 
 var app = new Vue({
 	el: "#app",
 	data: {
-		wizard: emojify("wizard")
+		harry       : emojify("harry"      ),
+		ron         : emojify("ron"        ),
+		hermione    : emojify("hermione"   )
 	},
 	methods: {
-		lumos: cast(emojify("lumos")),
-		incendio: cast(emojify("incendio"))
+		// oculus_reparo returns a spell (function) that repairs glasses
+		oculus_reparo: spell(emojify("oculus-reparo")),
+		// wingardium_leviosa returns a spell (function) that levitates an object
+		wingardium_leviosa: spell(emojify("wingardium-leviosa")),
+		// alohomora returns a spell (function) that unlocks a door
+		alohomora: spell(emojify("alohomora"))
 	}
 })
+
 
 		</script>
 
